@@ -1,11 +1,21 @@
 # Checkpoint-Disruptive-Architectures
 
-Ideias:
+## Ideias:
 
-- Alimentador de PET automatico
+## Projeto mais complexo
 
-- Brinquedo automatico
+- Câmera de monitoramento para o PET (scanner + treinador + alimentador + casos de emergência + notificações + confortador + áudio da casa  (+talvez o treinador)).
 
-- Scanner de ferida, especie e comunicador com clinica veterinaria
+## Projetos mais simples
+
+- Treinador de PET automatico, que fala algo, e se o pet cumprir, recebe um petisco.
+
+- Brinquedo automatico (Ex: joga bola pro pet).
+
+- Alimentador automatico (Alimenta com base no horário + Verifica estoque).
+
+- Camera de monitoramento + Casinha de PET automática + Alimentador.
+
+- Coleira e/ou chip para o pet com sensor de temperatura, GPS, batimento cardiaco.
 
 - 
