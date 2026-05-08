@@ -1,0 +1,11 @@
+{
+  "name": "gps-neo6m",
+  "author": "Laya _Pashikanti",
+  "pins": [
+    "VCC",
+    "GND",
+    "RX",
+    "TX"
+  ],
+  "controls": []
+}
