@@ -17,7 +17,6 @@ DHT dht(DHTPIN, DHTTYPE);
 #define LED_CRITICO 26 // LED Vermelho
 #define LED_OK 27      // LED Verde
 
-// LCD no I2C (endereço padrão 0x27)
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 #define WIFI_SSID "Wokwi-GUEST"
@@ -28,7 +27,7 @@ WebServer server(80);
 
 // Variáveis dos sensores da coleira
 float temperatura = 0;
-int bpm = 110;
+int bpm = 0;
 
 // Coordenada GPS (Ex: São Paulo)
 float lat = -23.550520;
@@ -418,7 +417,7 @@ void loop(void) {
     }
   }
 
-  // Simula e atualiza os sensores a cada 5 segundos
+  // Atualiza os sensores a cada 5 segundos
   if (millis() - lastUpdate > 5000) {
     lastUpdate = millis();
     
@@ -433,19 +432,14 @@ void loop(void) {
       Serial.println("GPS OK! Localizacao atualizada.");
     }
     
-    // Lê a temperatura real do DHT22
-    float t = dht.readTemperature();
-      if (!isnan(t)) {
-      temperatura = t;
-    }
+    // Lê a temperatura do DHT22
+    temperatura = dht.readTemperature();
 
     // Leitura do valor analógico do sensor de pulso (simulado via potenciômetro)
     int16_t pulseValue = analogRead(PULSE_PIN);
-    
     // Mapeia o valor bruto do potenciômetro (0 a 4095 no ESP32) para a faixa de BPM (40 a 200)
     bpm = map(pulseValue, 0, 4095, 40, 200);
     
-    // A latitude e longitude agora sao atualizadas pelo GPS real
     // Lógica de alerta crítico
     // Condições críticas: temperatura fora de 36 - 40 ou BPM fora de 60 - 160
     bool isCriticalTemp = (temperatura < 36 || temperatura > 40);
@@ -471,7 +465,6 @@ void loop(void) {
       lcd.print("C  BPM:");
       lcd.print(bpm);
     } else {
-      // Se tiver ALGUM problema, mostra o status de cada um em uma linha
 
       // Linha 0 (Temperatura)
       lcd.setCursor(0, 0);
