@@ -17,6 +17,10 @@ DHT dht(DHTPIN, DHTTYPE);
 #define LED_CRITICO 26 // LED Vermelho
 #define LED_OK 27      // LED Verde
 
+#define BUTTON_PIN 14
+bool showGPS = false;
+bool lastButtonState = HIGH;
+
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 #define WIFI_SSID "Wokwi-GUEST"
@@ -342,6 +346,44 @@ void sendJsonStatus() {
   server.send(200, "application/json", response);
 }
 
+void updateLCD() {
+  bool isCriticalTemp = (temperatura < 36 || temperatura > 40);
+  bool isCriticalBPM = (bpm < 60 || bpm > 160);
+
+  lcd.clear();
+  
+  if (showGPS) {
+    lcd.setCursor(0, 0);
+    lcd.print("Lat:");
+    lcd.print(lat, 6);
+    lcd.setCursor(0, 1);
+    lcd.print("Lng:");
+    lcd.print(lng, 6);
+  } else {
+    // Se estiver tudo bem, mostra a mensagem de OK e os dados resumidos
+    if (!isCriticalTemp && !isCriticalBPM) {
+      lcd.setCursor(0, 0);
+      lcd.print("Tudo OK!");
+      lcd.setCursor(0, 1);
+      lcd.print("T:");
+      lcd.print(temperatura, 1);
+      lcd.print("C  BPM:");
+      lcd.print(bpm);
+    } else {
+      // Linha 0 (Temperatura)
+      lcd.setCursor(0, 0);
+      lcd.print(isCriticalTemp ? "ALERTA T: " : "Temp OK: ");
+      lcd.print(temperatura, 1);
+      lcd.print("C");
+      
+      // Linha 1 (BPM)
+      lcd.setCursor(0, 1);
+      lcd.print(isCriticalBPM ? "ALERTA BPM: " : "BPM OK: ");
+      lcd.print(bpm);
+    }
+  }
+}
+
 void setup(void) {
   Serial.begin(115200);
   gpsSerial.begin(GPS_BAUDRATE, SERIAL_8N1, 16, 17); // Inicia a serial do GPS RX=16 e TX=17
@@ -349,6 +391,7 @@ void setup(void) {
   // Configuração dos pinos e sensores
   pinMode(LED_CRITICO, OUTPUT);
   pinMode(LED_OK, OUTPUT);
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
   
   dht.begin();
   
@@ -407,6 +450,20 @@ void setup(void) {
 void loop(void) {
   server.handleClient();
   
+  bool currentButtonState = digitalRead(BUTTON_PIN);
+  
+  if (currentButtonState != lastButtonState) {
+    delay(50); // Aguarda o bounce estabilizar
+    currentButtonState = digitalRead(BUTTON_PIN); // Confirma o novo estado
+    
+    // Dispara a ação apenas na transição de solto (HIGH) para pressionado (LOW)
+    if (currentButtonState == LOW && lastButtonState == HIGH) {
+      showGPS = !showGPS;
+      updateLCD();
+    }
+    lastButtonState = currentButtonState;
+  }
+
   // Le os dados do GPS sempre que disponiveis
   while (gpsSerial.available() > 0) {
     if (gps.encode(gpsSerial.read())) {
@@ -453,29 +510,6 @@ void loop(void) {
       digitalWrite(LED_OK, HIGH);
     }
 
-    lcd.clear();
-
-    // Se estiver tudo bem, mostra a mensagem de OK e os dados resumidos
-    if (!isCriticalTemp && !isCriticalBPM) {
-      lcd.setCursor(0, 0);
-      lcd.print("Tudo OK!");
-      lcd.setCursor(0, 1);
-      lcd.print("T:");
-      lcd.print(temperatura, 1);
-      lcd.print("C  BPM:");
-      lcd.print(bpm);
-    } else {
-
-      // Linha 0 (Temperatura)
-      lcd.setCursor(0, 0);
-      lcd.print(isCriticalTemp ? "ALERTA T: " : "Temp OK: ");
-      lcd.print(temperatura, 1);
-      lcd.print("C");
-      
-      // Linha 1 (BPM)
-      lcd.setCursor(0, 1);
-      lcd.print(isCriticalBPM ? "ALERTA BPM: " : "BPM OK: ");
-      lcd.print(bpm);
-    }
+    updateLCD();
   }
 }

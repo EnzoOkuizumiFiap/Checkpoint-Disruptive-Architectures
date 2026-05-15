@@ -41,7 +41,15 @@
     },
     { "type": "wokwi-dht22", "id": "dht1", "top": -143.7, "left": 13.8, "attrs": {} },
     { "type": "chip-gps-neo6m", "id": "gps1", "top": 250.62, "left": -14.4, "attrs": {} },
-    { "type": "wokwi-potentiometer", "id": "pot1", "top": -106.9, "left": -115.4, "attrs": {} }
+    { "type": "wokwi-potentiometer", "id": "pot1", "top": -106.9, "left": -115.4, "attrs": {} },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": 181.8,
+      "left": -208.2,
+      "rotate": 90,
+      "attrs": { "color": "green", "xray": "1" }
+    }
   ],
   "connections": [
     [ "esp:TX", "$serialMonitor:RX", "", [] ],
@@ -60,12 +68,15 @@
     [ "esp:GND.2", "dht1:GND", "black", [ "v0" ] ],
     [ "dht1:SDA", "esp:18", "blue", [ "v9.6", "h76.9", "v124.8" ] ],
     [ "gps1:VCC", "esp:5V", "red", [ "h-115.2", "v-124.8" ] ],
-    [ "gps1:TX", "esp:16", "green", [ "h49.81", "v-125", "h-105.6" ] ],
+    [ "gps1:TX", "esp:16", "green", [ "h49.81", "v-192", "h-105.6" ] ],
     [ "gps1:RX", "esp:17", "green", [ "v9.6", "h88.21", "v0" ] ],
-    [ "gps1:GND", "esp:GND.1", "black", [ "h-144", "v-182.4" ] ],
-    [ "pot1:VCC", "esp:3V3", "red", [ "v0" ] ],
+    [ "gps1:GND", "esp:GND.1", "black", [ "h-87", "v-182.4" ] ],
+    [ "pot1:VCC", "esp:3V3", "red", [ "v67.2", "h66.25" ] ],
     [ "pot1:GND", "esp:GND.2", "black", [ "v28.8", "h182.4" ] ],
-    [ "esp:35", "pot1:SIG", "green", [ "h-76.65", "v-67.2" ] ]
+    [ "esp:35", "pot1:SIG", "green", [ "h-76.65", "v-67.2" ] ],
+    [ "esp:5", "esp:5V", "green", [ "h38.4", "v134.4", "h-134.55" ] ],
+    [ "btn1:1.l", "esp:14", "green", [ "v-28.8" ] ],
+    [ "esp:GND.1", "btn1:2.r", "black", [ "h-95.85", "v105.6" ] ]
   ],
   "dependencies": {}
 }
