@@ -60,7 +60,7 @@
     [ "esp:GND.2", "dht1:GND", "black", [ "v0" ] ],
     [ "dht1:SDA", "esp:18", "blue", [ "v9.6", "h76.9", "v124.8" ] ],
     [ "gps1:VCC", "esp:5V", "red", [ "h-115.2", "v-124.8" ] ],
-    [ "gps1:TX", "esp:16", "green", [ "h49.81", "v-192", "h-105.6" ] ],
+    [ "gps1:TX", "esp:16", "green", [ "h49.81", "v-125", "h-105.6" ] ],
     [ "gps1:RX", "esp:17", "green", [ "v9.6", "h88.21", "v0" ] ],
     [ "gps1:GND", "esp:GND.1", "black", [ "h-144", "v-182.4" ] ],
     [ "pot1:VCC", "esp:3V3", "red", [ "v0" ] ],
