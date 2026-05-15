@@ -14,5 +14,9 @@ channel = 6    # Set WiFi channel to 6 for faster connection
 
 # Forward http://127.0.0.2:9090 to port 80 on the simulated ESP32:
 [[net.forward]]
-from = "127.0.0.2:9090"
+from = "localhost:8280"
 to = "target:80"
+
+[[chip]]
+name = "gps-neo6m"
+binary = "gps-neo6m.chip.wasm"
